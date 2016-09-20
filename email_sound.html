@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<title>MUSI 3390 FINAL PROJECT</title>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<link rel="stylesheet" type="text/css" href="musi3390_style.css"/>
+<script type="text/javascript">
+	var body = "";
+	var name = "";
+	var char_total = 0; //A word's char total
+	var stringSound = []; //Associative array, char_total with word
+	var oscArray = []; //Oscillator array
+	var context = new AudioContext();
+	var stop = 0; //Stopping time of oscillators
+	
+	//Retrieves email from database	
+	function getEmail() {
+		$.post("email_retrieve.php", "",
+			function(data) {
+				new_data = data.split('~');
+				name = new_data[0];
+				body = new_data[1];
+				stringSound = [];
+				stringConvert();
+				testSound();
+
+			})
+	}
+
+	//Converts words in email body into the sum of every ASCII char value in the word
+	function stringConvert() {
+		$('#From span').text('From: ' + name);
+		$('#Body span').text('Message: ' + body);
+		body.trim();
+		var word_array = body.split(/\s+/);
+		for (var word in word_array) {
+			word_array[word] = word_array[word].trim();
+			for (var char in word_array[word]) {
+				char_total += word_array[word].charCodeAt(char);
+			}
+			stringSound[char_total] = word_array[word].trim();
+			char_total = 0;
+		}
+		
+	}
+
+	//Creates an oscillator for every word, where the frequency is the ASCII char sum and the duration is randomized
+	function testSound() {
+		for (var i = 0; i < Object.keys(stringSound).length + 1; i++) {
+			oscArray[i] = context.createOscillator();
+			var keys_size = (Object.keys(stringSound).length - 1);
+			var rand_index = Math.floor(Math.random() * keys_size);
+			
+			oscArray[i].frequency.value = Object.keys(stringSound)[rand_index];
+			oscArray[i].connect(context.destination);
+			oscArray[i].start(Math.floor(Math.random() * Object.keys(stringSound).length + 1));
+			
+			stop = 5+Math.floor((Math.random() * Object.keys(stringSound).length + 1));
+			oscArray[i].stop(stop);
+			stringSound.splice(Object.keys(stringSound)[rand_index],1);
+			i = 0;
+			
+		}
+	}
+
+
+</script>
+<body>
+
+	<input type = "button" id = "submit" value = "Get Email" onclick = "getEmail()" /></br>
+	
+	<center>
+		<div id = "From"><span></span></div></br>
+		<div id = "Body"><span></span></div></br>
+	<center>
+</body>
+</html>
+

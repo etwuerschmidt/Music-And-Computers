@@ -1,0 +1,33 @@
+#submit {
+    height: 35px;
+    display: block;
+    margin: 0 auto;
+    width: 175px;
+    font-size: 18px;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#f4f5f5), to(#dfdddd));
+
+    border: 1px solid white;
+    outline: none;
+    border-radius: 5px;
+}
+
+#submit:hover {
+    color: white;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#d9dddd), to(#c6c3c3));
+}
+
+#submit:focus {
+    box-shadow: 0 0 5px 1px black;
+}
+
+#From, #Body {
+    text-shadow: 1px 1px 5px black;
+    font-size: 25pt;
+    font-style: italic;
+    text-align: center;
+    color: white;
+}
+
+body {
+    background-color: lightblue;
+}
